@@ -93,7 +93,7 @@ export const getLOByIdPO = async (req, res) => {
 
 // Get LO by ID Kantor
 export const getLOByIdKantor = async (req, res) => {
-  
+
   const { id_kantor } = req.params;
 
   try {
@@ -234,5 +234,27 @@ export const getFilteredLO = async (req, res) => {
       status: "error",
       message: "Internal Server Error",
     });
+  }
+
+};
+
+export const getRekapAll = async (req, res) => {
+  const { page = 1, limit = 10, nomor_lo, titik_muat, nama_kabupaten_kota, nopol_mobil, nama_driver, titik_bongkar, startDate, endDate, status_lo } = req.query;
+  try {
+    const { data, total } = await LO.getRekapAll(
+      parseInt(page),
+      parseInt(limit),
+      { nomor_lo, titik_muat, nama_kabupaten_kota, nopol_mobil, nama_driver, titik_bongkar, startDate, endDate, status_lo }
+    );
+
+    res.json({
+      data,
+      currentPage: parseInt(page),
+      limit: parseInt(limit),
+      totalData: total,
+      totalPages: Math.ceil(total / parseInt(limit)),
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };

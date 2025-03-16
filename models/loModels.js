@@ -295,17 +295,17 @@ const LO = {
         lo.file_lo;
       `;
 
-      
+
       const [loList] = await sequelize.query(query, {
-        replacements: params, 
-        type: sequelize.QueryTypes.SELECT, 
+        replacements: params,
+        type: sequelize.QueryTypes.SELECT,
       });
       return loList;
     } catch (error) {
       console.error("Error fetching filtered loading orders:", error);
       throw error;
     }
-  }
+  },
 
 };
 

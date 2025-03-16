@@ -7,6 +7,7 @@ import roleRoutes from "./routes/roleRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import kabupatenkotaRoutes from "./routes/kabupatenkotaRoutes.js";
 import loRoutes from "./routes/loRoutes.js";
+import itemLoRoutes from "./routes/itemLoRoutes.js";
 const app = express();
 const PORT = process.env.PORT || 3091;
 const upload = multer();
@@ -36,6 +37,7 @@ const init = async () => {
         app.use("/api/v1", userRoutes);
         app.use("/api/v1", kabupatenkotaRoutes);
         app.use("/api/v1", loRoutes);
+        app.use("/api/v1", itemLoRoutes);
 
         app.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`);
