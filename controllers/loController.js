@@ -93,6 +93,7 @@ export const getLOByIdPO = async (req, res) => {
 
 // Get LO by ID Kantor
 export const getLOByIdKantor = async (req, res) => {
+  
   const { id_kantor } = req.params;
 
   try {

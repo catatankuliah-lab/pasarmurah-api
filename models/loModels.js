@@ -127,7 +127,6 @@ const LO = {
   addLO: async (loData) => {
     const {
       id_alokasi,
-      id_po,
       id_kantor,
       nomor_lo,
       tanggal_lo,
@@ -137,19 +136,19 @@ const LO = {
       nama_driver,
       telpon_driver,
       file_lo,
+      status_lo,
     } = loData;
     const [result] = await sequelize.query(
       `
       INSERT INTO lo (
-        id_alokasi, id_po, id_kantor, nomor_lo, tanggal_lo, titik_muat,
-        jenis_mobil, nopol_mobil, nama_driver, telpon_driver, file_lo
+        id_alokasi, id_kantor, nomor_lo, tanggal_lo, titik_muat,
+        jenis_mobil, nopol_mobil, nama_driver, telpon_driver, file_lo, status_lo
       )
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `,
       {
         replacements: [
           id_alokasi,
-          id_po,
           id_kantor,
           nomor_lo,
           tanggal_lo,
@@ -159,6 +158,7 @@ const LO = {
           nama_driver,
           telpon_driver,
           file_lo,
+          status_lo,
         ],
       }
     );
