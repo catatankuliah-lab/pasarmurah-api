@@ -5,21 +5,9 @@ const LO = {
   getAllLO: async () => {
     const [results] = await sequelize.query(`
       SELECT 
-        lo.id_lo,
-        lo.id_alokasi,
-        lo.id_po,
-        lo.id_kantor,
-        lo.nomor_lo,
-        lo.tanggal_lo,
-        lo.titik_muat AS lo_titik_muat,
-        lo.jenis_mobil,
-        lo.nopol_mobil,
-        lo.nama_driver,
-        lo.telpon_driver,
-        lo.file_lo,
-        lo.status_lo,
+        lo.*,
         kantor.nama_kantor,
-        kantor.alamat_kantor
+        kantor.kode_kantor
       FROM 
         lo
       LEFT JOIN 
@@ -121,19 +109,12 @@ const LO = {
       `
       SELECT 
         lo.*,
-        alokasi.keterangan_alokasi,
-        po.tanggal_po,
-        po.customer,
-        po.titik_muat,
-        po.titik_bongkar,
-        po.jam_stand_by,
-        po.status_po
-      FROM 
+        kantor.nama_kantor,
+        kantor.kode_kantor
+        FROM 
         lo
       LEFT JOIN 
-        alokasi ON lo.id_alokasi = alokasi.id_alokasi
-      LEFT JOIN 
-        po ON lo.id_po = po.id_po
+        kantor ON lo.id_kantor = kantor.id_kantor
       WHERE 
         lo.id_kantor = ?
     `,
