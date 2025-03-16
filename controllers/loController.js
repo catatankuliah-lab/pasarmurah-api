@@ -40,7 +40,6 @@ export const getJumlahLOBulanan = async (req, res) => {
 // Get LO by ID
 export const getLOById = async (req, res) => {
   const { id_lo } = req.params;
-
   try {
     const lo = await LO.getLOById(id_lo);
     if (lo) {
@@ -121,13 +120,13 @@ export const getLOByIdKantor = async (req, res) => {
 
 // Add a new LO
 export const addLO = async (req, res) => {
-  const loData = req.body;
+  const { id_kantor, nomor_lo, tanggal_lo, titik_muat, jenis_mobil, nopol_mobil, nama_driver, telpon_driver, file_lo, status_lo } = req.body;
 
   try {
-    const newLO = await LO.addLO(loData);
+    const id_lo = await LO.addLO(id_kantor, nomor_lo, tanggal_lo, titik_muat, jenis_mobil, nopol_mobil, nama_driver, telpon_driver, file_lo, status_lo);
     res.status(201).json({
       status: "success",
-      data: newLO,
+      data: id_lo,
       message: "LO created successfully.",
     });
   } catch (error) {
