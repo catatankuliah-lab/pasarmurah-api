@@ -1,5 +1,5 @@
 import express from "express";
-import * as kabupatenKotaController from "../controller/kabupatenkotaController.js";
+import * as kabupatenKotaController from "../controllers/kabupatenkotaController.js";
 import * as authMiddleware from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
