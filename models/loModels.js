@@ -42,36 +42,9 @@ const LO = {
     const [results] = await sequelize.query(
       `
       SELECT 
-        lo.id_lo,
-        lo.id_alokasi,
-        lo.id_po,
-        lo.id_kantor,
-        lo.nomor_lo,
-        lo.tanggal_lo,
-        lo.titik_muat AS lo_titik_muat,
-        lo.jenis_mobil,
-        lo.nopol_mobil,
-        lo.nama_driver,
-        lo.telpon_driver,
-        lo.file_lo,
-        lo.status_lo,
-        alokasi.keterangan_alokasi,
-        po.tanggal_po,
-        po.customer,
-        po.titik_muat AS po_titik_muat,
-        po.titik_bongkar,
-        po.jam_stand_by,
-        po.status_po,
-        kantor.nama_kantor,
-        kantor.alamat_kantor
+        lo.*
       FROM 
         lo
-      LEFT JOIN 
-        alokasi ON lo.id_alokasi = alokasi.id_alokasi
-      LEFT JOIN 
-        po ON lo.id_po = po.id_po
-      LEFT JOIN 
-        kantor ON lo.id_kantor = kantor.id_kantor
       WHERE 
         lo.id_lo = ?
     `,
@@ -124,31 +97,59 @@ const LO = {
   },
 
   // Add LO
-  addLO: async (loData) => {
-    const {
-      id_alokasi,
-      id_kantor,
-      nomor_lo,
-      tanggal_lo,
-      titik_muat,
-      jenis_mobil,
-      nopol_mobil,
-      nama_driver,
-      telpon_driver,
-      file_lo,
-      status_lo,
-    } = loData;
-    const [result] = await sequelize.query(
+  addLO: async (id_kantor, nomor_lo, tanggal_lo, titik_muat, jenis_mobil, nopol_mobil, nama_driver, telpon_driver, file_lo, status_lo) => {
+
+    const result = await sequelize.query(
       `
       INSERT INTO lo (
-        id_alokasi, id_kantor, nomor_lo, tanggal_lo, titik_muat,
+        id_kantor, nomor_lo, tanggal_lo, titik_muat,
         jenis_mobil, nopol_mobil, nama_driver, telpon_driver, file_lo, status_lo
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `,
       {
         replacements: [
-          id_alokasi,
+          id_kantor,
+          nomor_lo,
+          tanggal_lo,
+          titik_muat,
+          jenis_mobil,
+          nopol_mobil,
+          nama_driver,
+          telpon_driver,
+          file_lo,
+          status_lo
+        ],
+      }
+    );
+    return result[0];
+  },
+
+  // Update LO
+  updateLO: async (id_lo, loData) => {
+    const {
+      id_kantor,
+          nomor_lo,
+          tanggal_lo,
+          titik_muat,
+          jenis_mobil,
+          nopol_mobil,
+          nama_driver,
+          telpon_driver,
+          file_lo,
+          status_lo
+    } = loData;
+    const [result] = await sequelize.query(
+      `
+      UPDATE lo
+      SET 
+        id_kantor = ?, nomor_lo = ?, tanggal_lo = ?, titik_muat = ?,
+        jenis_mobil = ?, nopol_mobil = ?, nama_driver = ?, telpon_driver = ?, file_lo = ?, status_lo = ?
+      WHERE 
+        id_lo = ?
+    `,
+      {
+        replacements: [
           id_kantor,
           nomor_lo,
           tanggal_lo,
@@ -159,50 +160,7 @@ const LO = {
           telpon_driver,
           file_lo,
           status_lo,
-        ],
-      }
-    );
-    return { id_lo: result.insertId, ...loData };
-  },
-
-  // Update LO
-  updateLO: async (id_lo, loData) => {
-    const {
-      id_alokasi,
-      id_po,
-      id_kantor,
-      nomor_lo,
-      tanggal_lo,
-      titik_muat,
-      jenis_mobil,
-      nopol_mobil,
-      nama_driver,
-      telpon_driver,
-      file_lo,
-    } = loData;
-    const [result] = await sequelize.query(
-      `
-      UPDATE lo
-      SET 
-        id_alokasi = ?, id_po = ?, id_kantor = ?, nomor_lo = ?, tanggal_lo = ?, titik_muat = ?,
-        jenis_mobil = ?, nopol_mobil = ?, nama_driver = ?, telpon_driver = ?, file_lo = ?
-      WHERE 
-        id_lo = ?
-    `,
-      {
-        replacements: [
-          id_alokasi,
-          id_po,
-          id_kantor,
-          nomor_lo,
-          tanggal_lo,
-          titik_muat,
-          jenis_mobil,
-          nopol_mobil,
-          nama_driver,
-          telpon_driver,
-          file_lo,
-          id_lo,
+          id_lo
         ],
       }
     );
