@@ -36,6 +36,7 @@ const User = {
 
   addUser: async (
     id_role,
+    id_kantor,
     username,
     password,
     status_user
@@ -43,12 +44,13 @@ const User = {
     const result = await sequelize.query(
       `
       INSERT INTO user (
-        id_role, username, password, status_user
-      ) VALUES (?, ?, ?, ?)
+        id_role, id_kantor, username, password, status_user
+      ) VALUES (?, ?, ?, ?, ?)
     `,
       {
         replacements: [
           id_role,
+          id_kantor,
           username,
           password,
           status_user
@@ -56,33 +58,7 @@ const User = {
       }
     );
     return result[0];
-  },
-
-  updateUser: async (id_user, userData) => {
-    const { id_role, username, password, status_user } = userData;
-    const [result] = await sequelize.query(
-      `
-      UPDATE user
-      SET 
-        id_role = ?,
-        username = ?,
-        password = ?,
-        status_user = ?
-      WHERE 
-        id_user = ?
-    `,
-      {
-        replacements: [
-          id_role,
-          username,
-          password,
-          status_user,
-          id_user
-        ],
-      }
-    );
-    return result.affectedRows > 0;
-  },
+  }
 };
 
 export default User;

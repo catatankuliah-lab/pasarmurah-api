@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "3090:3090"
+      - "3091:3091"
     env_file:
       - .env
     volumes:
