@@ -1,4 +1,5 @@
 import sequelize from "../config/config.js";
+import { deleteMuatan, getMuatanByLO } from "../controllers/itemLoController.js";
 
 const ItemLO = {
   getRekapAll: async (filters = {}) => {
@@ -88,6 +89,54 @@ const ItemLO = {
     }
   },
 
+
+  addMuatan: async (id_lo, id_kabupaten_kota, titik_bongkar, beras, minyak, terigu, gula) => {
+    // console.log("Received data:", titikBongkarData);
+
+    const result = await sequelize.query(
+      `
+      INSERT INTO item_lo (id_lo, id_kabupaten_kota, titik_bongkar, beras, minyak, terigu, gula)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `,
+      {
+        replacements: [id_lo, id_kabupaten_kota, titik_bongkar, beras, minyak, terigu, gula],
+      }
+    );
+    return result[0];
+  },
+
+  getMuatanByLO: async (id_lo) => {
+    const [results] = await sequelize.query(
+      `
+      SELECT 
+      item_lo.id_item_lo,
+      item_lo.id_lo,
+      item_lo.id_kabupaten_kota,
+      item_lo.titik_bongkar,
+      item_lo.beras,
+      item_lo.minyak,
+      item_lo.terigu,
+      item_lo.gula,
+      kabupaten_kota.nama_kabupaten_kota
+    FROM item_lo
+    JOIN kabupaten_kota ON item_lo.id_kabupaten_kota = kabupaten_kota.id_kabupaten_kota
+    WHERE item_lo.id_lo = 2;
+
+    `,
+      { replacements: [id_lo] }
+    );
+    return results;
+  },
+
+  deleteMuatan: async (id_item_lo) => {
+    const [result] = await sequelize.query(
+      `DELETE FROM item_lo WHERE id_item_lo = ?`,
+      { replacements: [id_item_lo] }
+    );
+    return result.affectedRows > 0;
+  },
 };
 
+
 export default ItemLO;
+
