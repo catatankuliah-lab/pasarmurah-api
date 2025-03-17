@@ -14,6 +14,21 @@ export const getRekapAll = async (req, res) => {
   }
 }
 
+export const getRekapKantor = async (req, res) => {
+  const { id_kantor, nomor_lo, titik_muat, nama_kabupaten_kota, nopol_mobil, nama_driver, titik_bongkar, startDate, endDate, status_lo } = req.query;
+  try {
+    const { data } = await ItemLO.getRekapKantor(
+      { id_kantor, nomor_lo, titik_muat, nama_kabupaten_kota, nopol_mobil, nama_driver, titik_bongkar, startDate, endDate, status_lo }
+    );
+
+    res.json({
+      data
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
 export const addMuatan = async (req, res) => {
   const { id_lo, id_kabupaten_kota, titik_bongkar, beras, minyak, terigu, gula } = req.body;
 

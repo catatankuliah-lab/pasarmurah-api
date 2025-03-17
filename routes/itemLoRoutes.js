@@ -10,6 +10,13 @@ router.get(
   itemLoController.getRekapAll
 );
 
+router.get(
+  "/rekapkantor",
+  authMiddleware.authenticate,
+  authMiddleware.authorizeRole([1, 2, 3, 4]),
+  itemLoController.getRekapKantor
+);
+
 router.post(
   "/muatan",
   authMiddleware.authenticate,
@@ -29,11 +36,5 @@ router.delete(
   authMiddleware.authorizeRole([1, 2, 3, 4]), // Adjust roles that are allowed to delete data
   itemLoController.deleteMuatan
 );
-// router.get(
-//   "/lo/rekapkantor",
-//   authMiddleware.authenticate,
-//   authMiddleware.authorizeRole([1, 2, 3, 4]),
-//   itemLoController.getRekapKantor
-// );
 
 export default router;

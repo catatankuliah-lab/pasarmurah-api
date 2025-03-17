@@ -16,24 +16,21 @@ const LO = {
     return results;
   },
 
-  getJumlahLOBulanan: async (bulan) => {
+  getJumlahLOKantor: async (id_kantor) => {
     try {
-      const tahunSekarang = new Date().getFullYear(); // Ambil tahun sekarang
-      const bulanFormatted = bulan.toString().padStart(2, "0"); // Format jadi '01', '02', dst.
-
       const [results] = await sequelize.query(
         `
         SELECT COUNT(*) as jumlahLO
         FROM lo
-        WHERE tanggal_po LIKE ?
+        WHERE id_kantor = :id_kantor
       `,
-        { replacements: [`${tahunSekarang}-${bulanFormatted}%`] }
+        { replacements: { id_kantor } }
       );
 
       return results[0].jumlahLO || 0;
     } catch (error) {
-      console.error("Error in getJumlahPOBulanan:", error);
-      throw new Error("Gagal mengambil jumlah PO bulanan");
+      console.error("Error in getJumlahLOBulanan:", error);
+      throw new Error("Gagal mengambil jumlah LO bulanan");
     }
   },
 
@@ -129,15 +126,15 @@ const LO = {
   updateLO: async (id_lo, loData) => {
     const {
       id_kantor,
-          nomor_lo,
-          tanggal_lo,
-          titik_muat,
-          jenis_mobil,
-          nopol_mobil,
-          nama_driver,
-          telpon_driver,
-          file_lo,
-          status_lo
+      nomor_lo,
+      tanggal_lo,
+      titik_muat,
+      jenis_mobil,
+      nopol_mobil,
+      nama_driver,
+      telpon_driver,
+      file_lo,
+      status_lo
     } = loData;
     const [result] = await sequelize.query(
       `

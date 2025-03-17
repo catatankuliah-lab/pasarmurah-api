@@ -18,19 +18,14 @@ export const getAllLO = async (req, res) => {
   }
 };
 
-export const getJumlahLOBulanan = async (req, res) => {
+export const getJumlahLOKantor = async (req, res) => {
   try {
-    const { bulan } = req.params;
-
-    // Validasi bulan (1-12)
-    if (!bulan || isNaN(bulan) || bulan < 1 || bulan > 12) {
-      return res.status(400).json({ message: "Bulan tidak valid" });
-    }
+    const { id_kantor } = req.params;
 
     // Ambil jumlah PO berdasarkan LIKE
-    const jumlahLO = await LO.getJumlahLOBulanan(bulan);
+    const jumlahLO = await LO.getJumlahLOKantor(id_kantor);
 
-    return res.status(200).json({ bulan, jumlahLO });
+    return res.status(200).json({ id_kantor, jumlahLO });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Terjadi kesalahan server" });

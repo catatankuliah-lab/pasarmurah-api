@@ -12,10 +12,10 @@ router.get(
 );
 
 router.get(
-  "/lo/jumlahpobulanan/:bulan",
+  "/lo/jumlahlokantor/:id_kantor",
   authMiddleware.authenticate,
   authMiddleware.authorizeRole([1, 2, 3, 4]),
-  loController.getJumlahLOBulanan
+  loController.getJumlahLOKantor
 );
 
 router.get(
