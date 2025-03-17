@@ -1,4 +1,12 @@
 import LO from "../models/loModels.js";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+export { upload };
 
 // Get all LOs
 export const getAllLO = async (req, res) => {
@@ -251,4 +259,47 @@ export const getRekapAll = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+};
+
+
+export const uploadLO = async (req, res) => {
+  upload.single("file_lo")(req, res, async (err) => {
+
+    if (err) {
+      return res.status(400).json({ error: err.message });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ error: "File tidak ditemukan" });
+    }
+
+    const nomorLo = req.body.nomor_lo;
+    const idKantor = req.body.id_kantor;
+    if (!nomorLo) {
+      return res.status(400).json({ error: "Nomor LO tidak ditemukan" });
+    }
+
+    // Tentukan lokasi penyimpanan
+    const uploadPath = "uploads/" + idKantor + "/";
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
+    }
+
+    // Tentukan nama file baru
+    const newFileName = `${nomorLo}.pdf`;
+    const filePath = path.join(uploadPath, newFileName);
+
+    // Simpan file dari buffer ke disk dengan nama yang diinginkan
+    fs.writeFile(filePath, req.file.buffer, (err) => {
+      if (err) {
+        return res.status(500).json({ error: "Gagal menyimpan file" });
+      }
+
+      console.log("Upload sukses:", newFileName);
+      res.json({
+        message: "Upload berhasil",
+        fileName: newFileName,
+      });
+    });
+  });
 };

@@ -54,6 +54,13 @@ router.post(
 );
 
 router.put(
+  "/lo/upload/:id_lo",
+  authMiddleware.authenticate,
+  authMiddleware.authorizeRole([1, 2, 3, 4]),
+  loController.uploadLO
+);
+
+router.put(
   "/lo/:id_lo",
   authMiddleware.authenticate,
   authMiddleware.authorizeRole([1, 2, 3, 4]), // Sesuaikan peran yang diizinkan untuk memperbarui data

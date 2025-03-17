@@ -23,7 +23,7 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(upload.none());
+app.use("/uploads", express.static("uploads"));
 
 const init = async () => {
     try {
