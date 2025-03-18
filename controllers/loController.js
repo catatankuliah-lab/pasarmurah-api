@@ -95,29 +95,27 @@ export const getLOByIdPO = async (req, res) => {
 
 // Get LO by ID Kantor
 export const getLOByIdKantor = async (req, res) => {
+  const { id_kantor, nomor_lo, titik_muat, nopol_mobil, nama_driver, startDate, endDate, status_lo } = req.query;
 
-  const { id_kantor } = req.params;
+  if (!id_kantor) {
+      return res.status(400).json({ message: "id_kantor harus disertakan!" });
+  }
 
   try {
-    const los = await LO.getLOByIdKantor(id_kantor);
-    if (los.length > 0) {
-      res.status(200).json({
-        status: "success",
-        data: los,
-        message: "LOs fetched successfully by Kantor ID.",
+      const { data } = await LO.getLOByIdKantor({
+          id_kantor,
+          nomor_lo,
+          titik_muat,
+          nopol_mobil,
+          nama_driver,
+          startDate,
+          endDate,
+          status_lo,
       });
-    } else {
-      res.status(404).json({
-        status: "error",
-        message: "No LOs found for the given Kantor ID.",
-      });
-    }
+
+      res.json({ data });
   } catch (error) {
-    console.error("Error fetching LOs by Kantor ID:", error);
-    res.status(500).json({
-      status: "error",
-      message: "Internal Server Error",
-    });
+      res.status(500).json({ message: error.message });
   }
 };
 

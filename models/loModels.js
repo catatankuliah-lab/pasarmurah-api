@@ -74,23 +74,66 @@ const LO = {
   },
 
   // Get LO by ID Kantor
-  getLOByIdKantor: async (id_kantor) => {
-    const [results] = await sequelize.query(
-      `
-      SELECT 
-        lo.*,
-        kantor.nama_kantor,
-        kantor.kode_kantor
-        FROM 
-        lo
-      LEFT JOIN 
-        kantor ON lo.id_kantor = kantor.id_kantor
-      WHERE 
-        lo.id_kantor = ?
-    `,
-      { replacements: [id_kantor] }
-    );
-    return results;
+  getLOByIdKantor: async (filters = {}) => {
+    try {
+      let whereClause = "WHERE lo.id_kantor = :id_kantor";
+      let replacements = { id_kantor: filters.id_kantor };
+
+      if (filters.nomor_lo) {
+        whereClause += " AND lo.nomor_lo LIKE :nomor_lo";
+        replacements.nomor_lo = `%${filters.nomor_lo}%`;
+      }
+      if (filters.titik_muat) {
+        whereClause += " AND lo.titik_muat LIKE :titik_muat";
+        replacements.titik_muat = `%${filters.titik_muat}%`;
+      }
+
+      if (filters.nopol_mobil) {
+        whereClause += " AND lo.nopol_mobil LIKE :nopol_mobil";
+        replacements.nopol_mobil = `%${filters.nopol_mobil}%`;
+      }
+
+      if (filters.nama_driver) {
+        whereClause += " AND lo.nama_driver LIKE :nama_driver";
+        replacements.nama_driver = `%${filters.nama_driver}%`;
+      }
+
+      if (filters.startDate && filters.endDate) {
+        whereClause += " AND lo.tanggal_lo BETWEEN :startDate AND :endDate";
+        replacements.startDate = filters.startDate;
+        replacements.endDate = filters.endDate;
+      } else if (filters.startDate) {
+        whereClause += " AND lo.tanggal_lo >= :startDate";
+        replacements.startDate = filters.startDate;
+      } else if (filters.endDate) {
+        whereClause += " AND lo.tanggal_lo <= :endDate";
+        replacements.endDate = filters.endDate;
+      }
+
+      if (filters.status_lo) {
+        whereClause += " AND lo.status_lo = :status_lo";
+        replacements.status_lo = filters.status_lo;
+      }
+
+      const query = `
+            SELECT 
+                lo.*,
+                kantor.nama_kantor,
+                kantor.kode_kantor
+            FROM lo
+            LEFT JOIN kantor ON lo.id_kantor = kantor.id_kantor
+            ${whereClause}
+        `;
+
+      const data = await sequelize.query(query, {
+        replacements,
+        type: sequelize.QueryTypes.SELECT,
+      });
+
+      return { data };
+    } catch (error) {
+      throw new Error("Error fetching data: " + error.message);
+    }
   },
 
   // Add LO
