@@ -11,6 +11,10 @@ const ItemLO = {
         whereClause += " AND lo.nomor_lo LIKE :nomor_lo";
         replacements.nomor_lo = `%${filters.nomor_lo}%`;
       }
+      if (filters.nama_kantor) {
+        whereClause += " AND kantor.nama_kantor LIKE :nama_kantor";
+        replacements.nama_kantor = `%${filters.nama_kantor}%`;
+      }
 
       if (filters.titik_muat) {
         whereClause += " AND lo.titik_muat LIKE :titik_muat";
