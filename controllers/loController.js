@@ -125,6 +125,8 @@ export const getLOByIdKantor = async (req, res) => {
 export const addLO = async (req, res) => {
   const { id_kantor, nomor_lo, tanggal_lo, titik_muat, jenis_mobil, nopol_mobil, nama_driver, telpon_driver, file_lo, status_lo } = req.body;
 
+  console.log(req.body);
+
   try {
     const id_lo = await LO.addLO(id_kantor, nomor_lo, tanggal_lo, titik_muat, jenis_mobil, nopol_mobil, nama_driver, telpon_driver, file_lo, status_lo);
     res.status(201).json({
@@ -263,6 +265,7 @@ export const getRekapAll = async (req, res) => {
 
 
 export const uploadLO = async (req, res) => {
+  const { id_lo } = req.params;
   upload.single("file_lo")(req, res, async (err) => {
 
     if (err) {
@@ -290,16 +293,38 @@ export const uploadLO = async (req, res) => {
     const filePath = path.join(uploadPath, newFileName);
 
     // Simpan file dari buffer ke disk dengan nama yang diinginkan
-    fs.writeFile(filePath, req.file.buffer, (err) => {
+    fs.writeFile(filePath, req.file.buffer, async (err) => {
       if (err) {
         return res.status(500).json({ error: "Gagal menyimpan file" });
       }
-
-      console.log("Upload sukses:", newFileName);
-      res.json({
-        message: "Upload berhasil",
-        fileName: newFileName,
-      });
+      try {
+        // Update database dengan nama file baru
+        const fileLOnya = uploadPath + "" + newFileName;
+        const updatedLO = await LO.uploadLO(id_lo, fileLOnya);
+        if (updatedLO) {
+          res.status(200).json({
+            status: "success",
+            data: updatedLO,
+            message: "LO updated successfully.",
+          });
+        } else {
+          res.status(404).json({
+            status: "error",
+            message: "LO not found.",
+          });
+        }
+      } catch (error) {
+        console.error("Error updating LO:", error);
+        res.status(500).json({
+          status: "error",
+          message: "Internal Server Error",
+        });
+      }
+      // console.log("Upload sukses:", newFileName);
+      // res.json({
+      //   message: "Upload berhasil",
+      //   fileName: newFileName,
+      // });
     });
   });
 };

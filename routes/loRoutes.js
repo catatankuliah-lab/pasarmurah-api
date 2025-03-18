@@ -49,7 +49,7 @@ router.get(
 router.post(
   "/lo",
   authMiddleware.authenticate,
-  authMiddleware.authorizeRole([1, 2, 3, 4]), // Sesuaikan peran yang diizinkan untuk menambahkan data
+  authMiddleware.authorizeRole([1, 2, 3, 4]),
   loController.addLO
 );
 

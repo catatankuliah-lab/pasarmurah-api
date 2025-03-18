@@ -262,6 +262,20 @@ const LO = {
     }
   },
 
+  uploadLO: async (id_lo, fileLOnya) => {
+    const [result] = await sequelize.query(
+      `
+      UPDATE lo
+      SET file_lo = ?
+      WHERE id_lo = ?
+    `,
+      {
+        replacements: [fileLOnya, id_lo],
+      }
+    );
+    return result.affectedRows > 0;
+  }
+
 };
 
 export default LO;
